@@ -30,7 +30,7 @@ exports.products_get_all = (req, res, next) => {
       //   }
     })
     .catch(err => {
-      console.log(err);
+      //console.log(err);
       res.status(500).json({
         error: err
       });
@@ -47,7 +47,7 @@ exports.products_create_product = (req, res, next) => {
   product
     .save()
     .then(result => {
-      console.log(result);
+      //console.log(result);
       res.status(201).json({
         message: "Created product successfully",
         createdProduct: {
@@ -62,7 +62,7 @@ exports.products_create_product = (req, res, next) => {
       });
     })
     .catch(err => {
-      console.log(err);
+      //console.log(err);
       res.status(500).json({
         error: err
       });
@@ -75,7 +75,7 @@ exports.products_get_product = (req, res, next) => {
     .select("name price _id productImage")
     .exec()
     .then(doc => {
-      console.log("From database", doc);
+      //console.log("From database", doc);
       if (doc) {
         res.status(200).json({
           product: doc,
@@ -91,7 +91,7 @@ exports.products_get_product = (req, res, next) => {
       }
     })
     .catch(err => {
-      console.log(err);
+      //console.log(err);
       res.status(500).json({ error: err });
     });
 };
@@ -114,7 +114,7 @@ exports.products_update_product = (req, res, next) => {
       });
     })
     .catch(err => {
-      console.log(err);
+      //console.log(err);
       res.status(500).json({
         error: err
       });
@@ -136,7 +136,7 @@ exports.products_delete = (req, res, next) => {
       });
     })
     .catch(err => {
-      console.log(err);
+      //console.log(err);
       res.status(500).json({
         error: err
       });

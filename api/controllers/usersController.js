@@ -27,13 +27,13 @@ exports.user_signup = (req, res, next) => {
             user
               .save()
               .then(result => {
-                console.log(result);
+                //console.log(result);
                 res.status(201).json({
                   message: "User created"
                 });
               })
               .catch(err => {
-                console.log(err);
+                //console.log(err);
                 res.status(500).json({
                   error: err
                 });
@@ -81,7 +81,7 @@ exports.user_login = (req, res, next) => {
       });
     })
     .catch(err => {
-      console.log(err);
+      //console.log(err);
       res.status(500).json({
         error: err
       });
@@ -97,7 +97,7 @@ exports.user_delete = (req, res, next) => {
       });
     })
     .catch(err => {
-      console.log(err);
+      //console.log(err);
       res.status(500).json({
         error: err
       });
