@@ -8,11 +8,20 @@ const productsRoutes = require("./api/routes/productsRoutes");
 const ordersRoutes = require("./api/routes/ordersRoutes");
 const usersRoutes = require('./api/routes/usersRoutes');
 const homesteadsRoutes = require('./api/routes/homesteadsRoutes');
+const favoritesRoutes = require('./api/routes/favoritesRoutes');
+const logsRoutes = require('./api/routes/logsRoutes');
+const offersRoutes = require('./api/routes/offersRoutes');
+const requestsRoutes = require('./api/routes/requestsRoutes');
+const reviewsRoutes = require('./api/routes/reviewsRoutes');
+const settingsRoutes = require('./api/routes/settingsRoutes');
 
-mongoose.set('useCreateIndex', true); // do need?
+//mongoose.set('useCreateIndex', true); // do need?
 mongoose.connect(
     process.env.PROD_MONGODB,
-    { useNewUrlParser: true } // do need?
+    { 
+      useCreateIndex: true,
+      useNewUrlParser: true
+    } // do need?
 );
 mongoose.Promise = global.Promise;
 
@@ -39,10 +48,16 @@ app.use("/products", productsRoutes);
 app.use("/orders", ordersRoutes);
 app.use("/users", usersRoutes);
 app.use("/homesteads", homesteadsRoutes);
+app.use("/favorites", favoritesRoutes);
+app.use("/logs", logsRoutes);
+app.use("/offers", offersRoutes);
+app.use("/requests", requestsRoutes);
+app.use("/reviews", reviewsRoutes);
+app.use("/settings", settingsRoutes);
 
 app.use((req, res, next) => {
   const error = new Error("Not found");
-  error.status = 404;
+  error.status = 409;
   next(error);
 });
 
