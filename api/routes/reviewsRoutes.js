@@ -1,16 +1,16 @@
 const express = require("express");
 const router = express.Router();
-const checkAuth2 = require('../middleware/check-auth2');
+const checkAuth = require('../middleware/check-auth');
 const Controller = require('../controllers/reviewsController');
 
-router.get("/", Controller.get_all); // by homestead
+router.get("/homestead/:homesteadId", Controller.get_all); // by homestead
 
-router.get("/:id", Controller.get_by_id);
+router.get("/:reviewId", Controller.get_by_id);
 
-router.post("/", checkAuth2, Controller.create);
+router.post("/", checkAuth, Controller.create);
 
-router.patch("/:id", checkAuth2, Controller.update);
+router.patch("/:reviewId", checkAuth, Controller.update);
 
-router.delete("/:id", checkAuth2, Controller.delete);
+router.delete("/:reviewId", checkAuth, Controller.delete);
 
 module.exports = router;

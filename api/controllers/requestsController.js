@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const Item = require("../models/request");
+const Request = require("../models/request");
 
 // send as email ?
 exports.create = (req, res, next) => {

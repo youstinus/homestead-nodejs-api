@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
-const Item = require("../models/offer");
+const Offer = require("../models/offer");
 
 exports.get_all = (req, res, next) => {
-    Item.find()
+    Offer.find()
     .select("homesteadId start end price active")
     .exec()
     .then(docs => {
@@ -34,7 +34,7 @@ exports.get_all = (req, res, next) => {
 
 exports.get_by_id = (req, res, next) => {
   const id = req.params.offerId;
-  Item.findById(id)
+  Offer.findById(id)
     .select("homesteadId start end price active")
     .exec()
     .then(doc => {
@@ -99,7 +99,7 @@ exports.update = (req, res, next) => {
   for (const ops of req.body) {
     updateOps[ops.propName] = ops.value;
   }
-  Item.update({ _id: id }, { $set: updateOps })
+  Offer.update({ _id: id }, { $set: updateOps })
     .exec()
     .then(result => {
       res.status(200).json({
@@ -119,7 +119,7 @@ exports.update = (req, res, next) => {
 
 exports.delete = (req, res, next) => {
   const id = req.params.offerId;
-  Item.remove({ _id: id })
+  Offer.remove({ _id: id })
     .exec()
     .then(result => {
       res.status(200).json({

@@ -22,7 +22,11 @@ exports.user_signup = (req, res, next) => {
             const user = new User({
               _id: new mongoose.Types.ObjectId(),
               email: req.body.email,
-              password: hash
+              password: hash,
+              firstname: req.body.firstname,
+              lastname: req.body.lastname,
+              phoneNumber: req.body.phoneNumber,
+              age: req.body.age
             });
             user
               .save()
@@ -67,7 +71,7 @@ exports.user_login = (req, res, next) => {
             },
             process.env.JWT_KEY,
             {
-              expiresIn: "1h"
+              expiresIn: "5h" // change after
             }
           );
           return res.status(200).json({
@@ -89,7 +93,7 @@ exports.user_login = (req, res, next) => {
 };
 
 exports.user_delete = (req, res, next) => {
-  User.remove({ _id: req.params.userId })
+  User.remove({ _id: req.userData.userId })
     .exec()
     .then(result => {
       res.status(200).json({

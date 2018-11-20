@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
-const Item = require("../models/log");
+const Logs = require("../models/log");
 
 exports.get_all = (req, res, next) => {
-    Item.find()
+  Logs.find()
     .select("userId details message date _id")
     .exec()
     .then(docs => {
@@ -34,7 +34,7 @@ exports.get_all = (req, res, next) => {
 
 exports.get_by_id = (req, res, next) => {
   const id = req.params.logId;
-  Item.findById(id)
+  Logs.findById(id)
     .select("userId details message date _id")
     .exec()
     .then(doc => {
@@ -91,7 +91,7 @@ exports.create = (req, res, next) => {
 
 exports.delete = (req, res, next) => {
   const id = req.params.logId;
-  Item.remove({ _id: id })
+  Logs.remove({ _id: id })
     .exec()
     .then(result => {
       res.status(200).json({

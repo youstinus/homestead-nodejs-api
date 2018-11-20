@@ -1,16 +1,17 @@
 const express = require("express");
 const router = express.Router();
-const checkAuth = require('../middleware/check-auth3'); // admin
 const Controller = require('../controllers/settingsController');
 
-router.get("/", checkAuth, Controller.get_all);
+// how to secure settings. Or do not need if global
 
-router.get("/:id", checkAuth, Controller.get_by_id);
+router.get("/", Controller.get_all);
 
-router.post("/", checkAuth, Controller.create);
+router.get("/:settingId", Controller.get_by_id);
 
-router.patch("/:id", checkAuth, Controller.update);
+router.post("/", Controller.create);
 
-router.delete("/:id", checkAuth, Controller.delete);
+router.patch("/:settingId", Controller.update);
+
+router.delete("/:settingId", Controller.delete);
 
 module.exports = router;

@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
-const Item = require("../models/favorite");
+const Favorite = require("../models/favorite");
 
 exports.get_all = (req, res, next) => {
-    Item.find()
+  Favorite.find()
     .select("userId homesteadId note _id")
     .exec()
     .then(docs => {
@@ -32,7 +32,7 @@ exports.get_all = (req, res, next) => {
 
 exports.get_by_id = (req, res, next) => {
   const id = req.params.favoriteId;
-  Item.findById(id)
+  Favorite.findById(id)
     .select("userId homesteadId note _id")
     .exec()
     .then(doc => {
@@ -56,9 +56,11 @@ exports.get_by_id = (req, res, next) => {
 };
 
 exports.create = (req, res, next) => {
+  console.log(req.userData);
     const item = new Favorite({
       _id: new mongoose.Types.ObjectId(),
-      userId: req.body.userId, // from headers from auth?
+      userId: req.userData.userId,
+      //userId: req.body.userId, // from headers from auth?
       homesteadId: req.body.homesteadId,
       note: req.body.note
     });
@@ -92,7 +94,7 @@ exports.update = (req, res, next) => {
   if(req.body != null && req.body.note != null){
       updateOps["note"] = req.body.note; // value, propName
   }
-  Item.update({ _id: id }, { $set: updateOps })
+  Favorite.update({ _id: id }, { $set: updateOps })
     .exec()
     .then(result => {
       res.status(200).json({
@@ -112,7 +114,7 @@ exports.update = (req, res, next) => {
 
 exports.delete = (req, res, next) => {
   const id = req.params.favoriteId;
-  Item.remove({ _id: id })
+  Favorite.remove({ _id: id })
     .exec()
     .then(result => {
       res.status(200).json({

@@ -3,6 +3,7 @@ const app = express();
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
+require('dotenv').config();
 
 const productsRoutes = require("./api/routes/productsRoutes");
 const ordersRoutes = require("./api/routes/ordersRoutes");

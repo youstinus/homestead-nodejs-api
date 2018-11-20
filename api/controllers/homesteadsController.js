@@ -3,7 +3,7 @@ const Homestead = require("../models/homestead");
 
 exports.get_all_homesteads = (req, res, next) => {
   Homestead.find()
-    .select("user title address homesteadImage details _id")
+    .select("userId title address latitude longtitude homesteadImages details website amenitiesIds features phoneNumbers emails priceFrom _id")
     .exec()
     .then(docs => {
       const response = {
@@ -39,46 +39,10 @@ exports.get_all_homesteads = (req, res, next) => {
     });
 };
 
-exports.create_homestead = (req, res, next) => {
-  const homestead = new Homestead({
-    _id: new mongoose.Types.ObjectId(),
-    user: req.header.Id,
-    title: req.body.title,
-    address: req.body.address,
-    homesteadImage: req.file.path,
-    details: req.body.details
-  });
-  homestead
-    .save()
-    .then(result => {
-      //console.log(result);
-      res.status(201).json({
-        message: "Created homestead successfully",
-        createdHomestead: {
-          user: result.userId,
-          title: result.title,
-          address: result.address,
-          details: result.details,
-          _id: result._id,
-          request: {
-            type: "GET",
-            url: "http://localhost:3000/homesteads/" + result._id
-          }
-        }
-      });
-    })
-    .catch(err => {
-      //console.log(err);
-      res.status(500).json({
-        error: err
-      });
-    });
-};
-
 exports.get_homestead = (req, res, next) => {
   const id = req.params.homesteadId;
   Homestead.findById(id)
-    .select("title address homesteadImage details _id")
+    .select("userId title address latitude longtitude homesteadImages details website amenitiesIds features phoneNumbers emails priceFrom _id")
     .exec()
     .then(doc => {
       //console.log("From database", doc);
@@ -106,6 +70,61 @@ exports.get_homestead = (req, res, next) => {
     .catch(err => {
       //console.log(err);
       res.status(500).json({ error: err });
+    });
+};
+
+exports.create_homestead = (req, res, next) => {
+  const homestead = new Homestead({
+    _id: new mongoose.Types.ObjectId(),
+    userId: req.body.userId,
+    title: req.body.title,
+    address: req.body.address,
+    latitude: req.body.latitude,
+    longtitude: req.body.longtitude,
+    //homesteadImages: [req.file.path],
+    homesteadImages: req.body.homesteadImages,
+    details: req.body.details,
+    website: req.body.website,
+    amenitiesIds: req.body.amenitiesIds,
+    features: req.body.features,
+    phoneNumbers: req.body.phoneNumbers,
+    emails: req.body.emails,
+    priceFrom: req.body.priceFrom
+  });
+  homestead
+    .save()
+    .then(result => {
+      //console.log(result);
+      res.status(201).json({
+        message: "Created homestead successfully",
+        createdHomestead: {
+          userId: result.userId,
+          title: result.title,
+          address: result.address,
+          latitude: result.latitude,
+          longtitude: result.longtitude,
+          //homesteadImages: [req.file.path],
+          homesteadImages: result.homesteadImages,
+          details: result.details,
+          website: result.website,
+          amenitiesIds: result.amenitiesIds,
+          features: result.features,
+          phoneNumbers: result.phoneNumbers,
+          emails: result.emails,
+          priceFrom: result.priceFrom,
+          _id: result._id,
+          request: {
+            type: "GET",
+            url: "http://localhost:3000/homesteads/" + result._id
+          }
+        }
+      });
+    })
+    .catch(err => {
+      //console.log(err);
+      res.status(500).json({
+        error: err
+      });
     });
 };
 
@@ -187,7 +206,6 @@ exports.delete_homestead = (req, res, next) => {
       });
     })
     .catch(err => {
-      //console.log(err);
       res.status(500).json({
         error: err
       });

@@ -1,11 +1,24 @@
 const express = require("express");
 const router = express.Router();
-const multer = require('multer');
+//const multer = require('multer');
 const checkAuth = require('../middleware/check-auth');
-const checkAuth2 = require('../middleware/check-auth2');
 const HomesteadController = require('../controllers/homesteadsController');
 
-const storage = multer.diskStorage({
+
+router.get("/", checkAuth, HomesteadController.get_all_homesteads);
+
+router.get("/user", checkAuth, HomesteadController.get_homesteads_by_user_id); // gets homestead by ownersId ?
+
+router.post("/", checkAuth, HomesteadController.create_homestead); // for owner ?
+
+router.get("/:homesteadId", checkAuth, HomesteadController.get_homestead);
+
+router.patch("/:homesteadId", checkAuth, HomesteadController.update_homestead);
+
+router.delete("/:homesteadId", checkAuth, HomesteadController.delete_homestead);
+
+
+/*const storage = multer.diskStorage({
   destination: function(req, file, cb) {
     cb(null, './uploads/');
   },
@@ -30,18 +43,6 @@ const upload = multer({
     fileSize: 1024 * 1024 * 5
   },
   fileFilter: fileFilter
-});
-
-router.get("/", HomesteadController.get_all_homesteads);
-
-router.get("/user", checkAuth2, HomesteadController.get_homesteads_by_user_id);
-
-router.post("/user", checkAuth, upload.single('homesteadImage'), HomesteadController.create_homestead);
-
-router.get("/:homesteadId", HomesteadController.get_homestead);
-
-router.patch("/:homesteadId", checkAuth, HomesteadController.update_homestead);
-
-router.delete("/:homesteadId", checkAuth, HomesteadController.delete_homestead);
+});*/
 
 module.exports = router;

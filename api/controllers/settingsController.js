@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
-const Item = require("../models/setting");
+const Setting = require("../models/setting");
 
 exports.get_all = (req, res, next) => {
-    Item.find()
+    Setting.find()
     .select("mainColor mainImage _id")
     .exec()
     .then(docs => {
@@ -31,7 +31,7 @@ exports.get_all = (req, res, next) => {
 
 exports.get_by_id = (req, res, next) => {
   const id = req.params.settingId;
-  Item.findById(id)
+  Setting.findById(id)
     .select("mainColor mainImage _id")
     .exec()
     .then(doc => {
@@ -55,12 +55,12 @@ exports.get_by_id = (req, res, next) => {
 };
 
 exports.create = (req, res, next) => {
-    const item = new Setting({
+    const setting = new Setting({      
       _id: new mongoose.Types.ObjectId(),
       mainColor: req.body.mainColor,
       mainImage: req.body.mainImage
     });
-    item.save()
+    setting.save()
       .then(result => {
         res.status(201).json({
           message: "Created setting successfully",
@@ -82,13 +82,14 @@ exports.create = (req, res, next) => {
       });
   };
 
+  // what values to update ?
 exports.update = (req, res, next) => {
   const id = req.params.settingId;
   const updateOps = {};
   for (const ops of req.body) {
     updateOps[ops.propName] = ops.value;
   }
-  Item.update({ _id: id }, { $set: updateOps })
+  Setting.update({ _id: id }, { $set: updateOps })
     .exec()
     .then(result => {
       res.status(200).json({
@@ -108,7 +109,7 @@ exports.update = (req, res, next) => {
 
 exports.delete = (req, res, next) => {
   const id = req.params.settingId;
-  Item.remove({ _id: id })
+  Setting.remove({ _id: id })
     .exec()
     .then(result => {
       res.status(200).json({
