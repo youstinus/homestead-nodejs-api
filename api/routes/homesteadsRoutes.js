@@ -3,19 +3,22 @@ const router = express.Router();
 //const multer = require('multer');
 const checkAuth = require('../middleware/check-auth');
 const HomesteadController = require('../controllers/homesteadsController');
+const guard = require('express-jwt-permissions')({
+  requestProperty: 'userData',
+  permissionsProperty: 'role'
+});
 
+router.get("/", checkAuth, guard.check(['usar'], ['sela']), HomesteadController.get_all_homesteads);
 
-router.get("/", checkAuth, HomesteadController.get_all_homesteads);
+router.get("/owner", checkAuth, guard.check('sela'), HomesteadController.get_homesteads_by_user_id); // gets homestead by ownersId ?
 
-router.get("/user", checkAuth, HomesteadController.get_homesteads_by_user_id); // gets homestead by ownersId ?
+router.post("/", checkAuth, guard.check('sela'), HomesteadController.create_homestead); // for owner ?
 
-router.post("/", checkAuth, HomesteadController.create_homestead); // for owner ?
+router.get("/:homesteadId", checkAuth, guard.check(['usar'] ,['sela']), HomesteadController.get_homestead);
 
-router.get("/:homesteadId", checkAuth, HomesteadController.get_homestead);
+router.patch("/:homesteadId", checkAuth, guard.check('sela'), HomesteadController.update_homestead);
 
-router.patch("/:homesteadId", checkAuth, HomesteadController.update_homestead);
-
-router.delete("/:homesteadId", checkAuth, HomesteadController.delete_homestead);
+router.delete("/:homesteadId", checkAuth, guard.check('sela'), HomesteadController.delete_homestead);
 
 
 /*const storage = multer.diskStorage({

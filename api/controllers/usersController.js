@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-
 const User = require("../models/user");
 
 exports.user_signup = (req, res, next) => {
@@ -23,6 +22,7 @@ exports.user_signup = (req, res, next) => {
               _id: new mongoose.Types.ObjectId(),
               email: req.body.email,
               password: hash,
+              role: req.body.role,
               firstname: req.body.firstname,
               lastname: req.body.lastname,
               phoneNumber: req.body.phoneNumber,
@@ -31,14 +31,13 @@ exports.user_signup = (req, res, next) => {
             user
               .save()
               .then(result => {
-                //console.log(result);
                 res.status(201).json({
                   message: "User created"
                 });
               })
               .catch(err => {
                 //console.log(err);
-                res.status(500).json({
+                res.status(403).json({
                   error: err
                 });
               });
@@ -66,17 +65,18 @@ exports.user_login = (req, res, next) => {
         if (result) {
           const token = jwt.sign(
             {
+              role: user[0].role,
               email: user[0].email,
               userId: user[0]._id
             },
             process.env.JWT_KEY,
             {
-              expiresIn: "5h" // change after
-            }
+              expiresIn: "5h" // change after            
+             }
           );
           return res.status(200).json({
             message: "Auth successful",
-            token: token
+            token: token // or just token
           });
         }
         res.status(401).json({
@@ -85,7 +85,6 @@ exports.user_login = (req, res, next) => {
       });
     })
     .catch(err => {
-      //console.log(err);
       res.status(500).json({
         error: err
       });

@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-
+// define roles: visor, mode, usar, sela, 
 module.exports = (req, res, next) => {
     try {
         const token = req.headers.authorization.split(" ")[1];
