@@ -33,8 +33,9 @@ exports.get_all_homesteads = (req, res, next) => {
     })
     .catch(err => {
       //console.log(err);
-      res.status(500).json({
-        error: err
+      res.status(400).json({
+        error: err,
+        body: req.body
       });
     });
 };
@@ -69,7 +70,7 @@ exports.get_homestead = (req, res, next) => {
       })
     .catch(err => {
       //console.log(err);
-      res.status(500).json({ error: err });
+      res.status(400).json({ error: err });
     });
 };
 
@@ -122,8 +123,9 @@ exports.create_homestead = (req, res, next) => {
     })
     .catch(err => {
       //console.log(err);
-      res.status(500).json({
-        error: err
+      res.status(400).json({
+        error: err,
+        body: req.body
       });
     });
 };
