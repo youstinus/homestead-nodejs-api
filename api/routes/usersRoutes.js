@@ -12,6 +12,8 @@ router.post("/signup", validate.validateRole, UserController.user_signup);
 
 router.post("/login", UserController.user_login);
 
+//router.patch("/", checkAuth, UserController.user_update);
+
 router.delete("/", checkAuth, guard.check(['mode'], ['visor']), UserController.user_delete);
 
 module.exports = router;

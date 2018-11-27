@@ -3,10 +3,10 @@ const Offer = require("../models/offer");
 
 exports.get_all = (req, res, next) => {
     Offer.find()
-    .select("homesteadId start end price active")
+    //.select("homesteadId start end price active")
     .exec()
-    .then(docs => {
-      const response = {
+    .then(results => {
+      /*const response = {
         count: docs.length,
         items: docs.map(doc => {
           return {
@@ -22,12 +22,15 @@ exports.get_all = (req, res, next) => {
             }
           };
         })
-      };
-      res.status(200).json(response);
+      };*/
+      res.status(200).json({
+        results
+      });
     })
     .catch(err => {
       res.status(400).json({
-        error: err
+        error: err,
+        message: "Get all offers"
       });
     });
 };
@@ -35,16 +38,17 @@ exports.get_all = (req, res, next) => {
 exports.get_by_id = (req, res, next) => {
   const id = req.params.offerId;
   Offer.findById(id)
-    .select("homesteadId start end price active")
+    //.select("homesteadId start end price active")
     .exec()
-    .then(doc => {
-      if (doc) {
+    .then(result => {
+      if (result) {
         res.status(200).json({
-          item: doc,
+          result
+          /*: result,
           request: {
             type: "GET",
             url: "http://localhost:3000/offers/"
-          }
+          }*/
         });
       } else {
         res
@@ -53,7 +57,10 @@ exports.get_by_id = (req, res, next) => {
       }
     })
     .catch(err => {
-      res.status(400).json({ error: err });
+      res.status(400).json({
+        error: err,
+        message: "Get one offer"
+      });
     });
 };
 
@@ -61,6 +68,7 @@ exports.create = (req, res, next) => {
     const item = new Offer({
       _id: new mongoose.Types.ObjectId(),
        // from headers from auth?
+       userId: req.userData.userId,
       homesteadId: req.body.homesteadId,
       start: req.body.start,
       end: req.body.end,
@@ -70,7 +78,8 @@ exports.create = (req, res, next) => {
     item.save()
       .then(result => {
         res.status(201).json({
-          message: "Created offer successfully",
+          result
+          /*message: "Created offer successfully",
           created: {
              // from headers from auth?
             homesteadId: result.homesteadId,
@@ -83,12 +92,13 @@ exports.create = (req, res, next) => {
               type: "POST",
               url: "http://localhost:3000/offers/" + result._id
             }
-          }
+          }*/
         });
       })
       .catch(err => {
         res.status(400).json({
-          error: err
+          error: err,
+          message: "Cannot create offer"
         });
       });
   };
@@ -96,43 +106,46 @@ exports.create = (req, res, next) => {
 exports.update = (req, res, next) => {
   const id = req.params.offerId;
   const updateOps = {};
+  // validate what fields to update
   for (const ops of req.body) {
     updateOps[ops.propName] = ops.value;
   }
-  Offer.update({ _id: id }, { $set: updateOps })
+  Offer.update({ _id: id, userId: req.userData.userId }, { $set: updateOps })
     .exec()
     .then(result => {
-      res.status(200).json({
+      res.status(200)/*.json({
         message: "offer updated",
         request: {
           type: "PUT",
           url: "http://localhost:3000/offers/" + id
         }
-      });
+      })*/;
     })
     .catch(err => {
       res.status(400).json({
-        error: err
+        error: err,
+        message: "Cannot update offer"
       });
     });
 };
 
 exports.delete = (req, res, next) => {
   const id = req.params.offerId;
-  Offer.remove({ _id: id })
+  Offer.remove({ _id: id, userId: req.userData.userId })
     .exec()
     .then(result => {
-      res.status(200).json({
+      res.status(200)/*.json({
         message: "offer deleted",
         request: {
           type: "DELETE",
           url: "http://localhost:3000/offers"
         }
-      });
+      })*/;
     })
     .catch(err => {
       res.status(400).json({
-        error: err
+        error: err,
+        message: "Cannot delete offer"
       });
     });
 };

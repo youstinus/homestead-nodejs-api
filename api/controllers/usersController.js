@@ -37,8 +37,9 @@ exports.user_signup = (req, res, next) => {
               })
               .catch(err => {
                 //console.log(err);
-                res.status(403).json({
-                  error: err
+                res.status(400).json({
+                  error: err,
+                  message: "User was not created. Check credentials"
                 });
               });
           }
@@ -71,8 +72,8 @@ exports.user_login = (req, res, next) => {
             },
             process.env.JWT_KEY,
             {
-              expiresIn: "5h" // change after            
-             }
+              expiresIn: "5h"            
+            }
           );
           return res.status(200).json({
             message: "Auth successful",
@@ -85,9 +86,63 @@ exports.user_login = (req, res, next) => {
       });
     })
     .catch(err => {
-      res.status(500).json({
-        error: err
+      res.status(400).json({
+        error: err,
+        message: "Other login issues"
       });
+    });
+};
+
+// create user update method
+exports.user_update = (req, res, next) => {
+  const updateOps = {};
+  for (const ops of req.body) {
+    updateOps[ops.propName] = ops.value; // hash password p
+  }
+
+  User.update({ _id: id, userId: req.userData.userId }, { $set: updateOps })
+    .exec()
+    .then(user => {
+      if (user.length != 1) {
+        return res.status(409).json({
+          message: "User not found"
+        });
+      } else {
+        bcrypt.hash(req.body.password, 10, (err, hash) => {
+          if (err) {
+            return res.status(400).json({
+              error: err,
+              message: "Errorhr" // check here if viable
+            });
+          } else {
+
+            /*const user = new User({
+              _id: new mongoose.Types.ObjectId(),
+              email: req.body.email,
+              password: hash,
+              role: req.body.role,
+              firstname: req.body.firstname,
+              lastname: req.body.lastname,
+              phoneNumber: req.body.phoneNumber,
+              age: req.body.age
+            });*/
+            user
+              .save()
+              .then(result => {
+                res.status(201).json({
+                  message: "User created"
+                });
+              })
+              .catch(err => {
+                //console.log(err);
+                res.status(400).json({
+                  error: err,
+                  message: "User was not updated. Check credentials"
+                });
+              });
+          }
+        });
+      }
     });
 };
 
@@ -95,14 +150,15 @@ exports.user_delete = (req, res, next) => {
   User.remove({ _id: req.userData.userId })
     .exec()
     .then(result => {
-      res.status(200).json({
+      res.status(200)/*.json({
         message: "User deleted"
-      });
+      })*/;
     })
     .catch(err => {
       //console.log(err);
-      res.status(500).json({
-        error: err
+      res.status(400).json({
+        error: err,
+        message: "User not deleted"
       });
     });
 };

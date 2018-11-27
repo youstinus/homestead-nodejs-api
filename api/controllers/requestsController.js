@@ -16,6 +16,8 @@ exports.create = (req, res, next) => {
     item.save()
       .then(result => {
         res.status(201).json({
+          result
+          /*
           message: "Created request successfully",
           created: {
             firstname: result.firstname,
@@ -30,12 +32,13 @@ exports.create = (req, res, next) => {
               type: "POST",
               url: "http://localhost:3000/requests/" + result._id
             }
-          }
+          }*/
         });
       })
       .catch(err => {
-        res.status(403).json({
-          error: err
+        res.status(400).json({
+          error: err,
+          message: "Cannot send request"
         });
       });
   };

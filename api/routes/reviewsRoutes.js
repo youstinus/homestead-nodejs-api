@@ -7,7 +7,7 @@ const guard = require('express-jwt-permissions')({
     permissionsProperty: 'role'
   });
 
-router.get("/homestead/:homesteadId", Controller.get_all); // by homestead
+router.get("/homestead/:homesteadId", Controller.get_all_by_homestead_id); // by homestead
 
 router.get("/:reviewId", Controller.get_by_id);
 

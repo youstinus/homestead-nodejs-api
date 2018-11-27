@@ -2,14 +2,14 @@ const mongoose = require("mongoose");
 const Review = require("../models/review");
 
 // taisyti
-exports.get_all = (req, res, next) => {
+exports.get_all_by_homestead_id = (req, res, next) => {
     Review.find( {homesteadId: req.params.homesteadId} )
-    .select("homesteadId userId name score title details created _id")
+    //.select("homesteadId userId name score title details created _id")
     .exec()
-    .then(docs => {
-      const response = {
-        count: docs.length,
-        items: docs.map(doc => {
+    .then(results => {
+      /*const response = {
+        count: results.length,
+        items: results.map(doc => {
           return {
             homesteadId: doc.homesteadId,
             userId: doc.userId,
@@ -25,12 +25,15 @@ exports.get_all = (req, res, next) => {
             }
           };
         })
-      };
-      res.status(200).json(response);
+      };*/
+      res.status(200).json({
+        results
+      });
     })
     .catch(err => {
-      res.status(403).json({
-        error: err
+      res.status(400).json({
+        error: err,
+        message: "Cannot retrieve all reviews by homesteadId"
       });
     });
 };
@@ -38,16 +41,17 @@ exports.get_all = (req, res, next) => {
 exports.get_by_id = (req, res, next) => {
   const id = req.params.reviewId;
   Review.findById(id)
-    .select("homesteadId name score title details created _id")
+    //.select("homesteadId name score title details created _id")
     .exec()
-    .then(doc => {
-      if (doc) {
+    .then(result => {
+      if (result) {
         res.status(200).json({
-          item: doc,
+          result
+          /*item: doc,
           request: {
             type: "GET",
             url: "http://localhost:3000/reviews/"
-          }
+          }*/
         });
       } else {
         res
@@ -56,7 +60,10 @@ exports.get_by_id = (req, res, next) => {
       }
     })
     .catch(err => {
-      res.status(403).json({ error: err });
+      res.status(400).json({ 
+        error: err,
+        message: "Cannot retrieve one review by id"
+       });
     });
 };
 
@@ -69,11 +76,14 @@ exports.create = (req, res, next) => {
       score: req.body.score,
       title: req.body.title,
       details: req.body.details,
-      created: req.body.created // date time now?
+      created: new Date()//req.body.created // date time now?
     });
     review.save()
       .then(result => {
         res.status(201).json({
+
+          result
+          /*
           message: "Created review successfully",
           created: {          
             homesteadId: result.homesteadId,
@@ -88,12 +98,13 @@ exports.create = (req, res, next) => {
               type: "POST",
               url: "http://localhost:3000/reviews/" + result._id
             }
-          }
+          }*/
         });
       })
       .catch(err => {
-        res.status(403).json({
-          error: err
+        res.status(400).json({
+          error: err,
+          message: "Cannot create review"
         });
       });
   };
@@ -104,40 +115,42 @@ exports.update = (req, res, next) => {
   for (const ops of req.body) {
     updateOps[ops.propName] = ops.value;
   }
-  Review.update({ _id: id }, { $set: updateOps })
+  Review.update({ _id: id, userId: req.userData.userId }, { $set: updateOps })
     .exec()
     .then(result => {
-      res.status(200).json({
+      res.status(200)/*.json({
         message: "review updated",
         request: {
           type: "PUT/PATCH",
           url: "http://localhost:3000/reviews/" + id
         }
-      });
+      })*/;
     })
     .catch(err => {
-      res.status(403).json({
-        error: err
+      res.status(400).json({
+        error: err,
+        message: "Cannot update review"
       });
     });
 };
 
 exports.delete = (req, res, next) => {
   const id = req.params.reviewId;
-  Review.remove({ _id: id })
+  Review.remove({ _id: id, userId: req.userData.userId })
     .exec()
     .then(result => {
-      res.status(200).json({
+      res.status(200)/*.json({
         message: "review deleted",
         request: {
           type: "DELETE",
           url: "http://localhost:3000/reviews"
         }
-      });
+      })*/;
     })
     .catch(err => {
-      res.status(403).json({
-        error: err
+      res.status(400).json({
+        error: err,
+        message: "Cannot delete review by id by user"
       });
     });
 };

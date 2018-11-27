@@ -3,12 +3,12 @@ const Setting = require("../models/setting");
 
 exports.get_all = (req, res, next) => {
     Setting.find()
-    .select("mainColor mainImage _id")
+    //.select("mainColor mainImage _id")
     .exec()
-    .then(docs => {
-      const response = {
-        count: docs.length,
-        items: docs.map(doc => {
+    .then(results => {
+      /*const response = {
+        count: results.length,
+        items: results.map(doc => {
           return {
             mainColor: doc.mainColor,
             mainImage: doc.mainImage,
@@ -19,12 +19,15 @@ exports.get_all = (req, res, next) => {
             }
           };
         })
-      };
-      res.status(200).json(response);
+      };*/
+      res.status(200).json({
+        results
+      });
     })
     .catch(err => {
       res.status(400).json({
-        error: err
+        error: err,
+        message: "Get all settings fail"
       });
     });
 };
@@ -32,16 +35,18 @@ exports.get_all = (req, res, next) => {
 exports.get_by_id = (req, res, next) => {
   const id = req.params.settingId;
   Setting.findById(id)
-    .select("mainColor mainImage _id")
+    //.select("mainColor mainImage _id")
     .exec()
-    .then(doc => {
-      if (doc) {
+    .then(result => {
+      if (result) {
         res.status(200).json({
+          result
+          /*
           item: doc,
           request: {
             type: "GET",
             url: "http://localhost:3000/settings/"
-          }
+          }*/
         });
       } else {
         res
@@ -50,7 +55,11 @@ exports.get_by_id = (req, res, next) => {
       }
     })
     .catch(err => {
-      res.status(403).json({ error: err });
+      res.status(400)
+      .json({ 
+        error: err,
+        message: "Cannot get setting by id"
+      });
     });
 };
 
@@ -63,6 +72,8 @@ exports.create = (req, res, next) => {
     setting.save()
       .then(result => {
         res.status(201).json({
+          result
+          /*
           message: "Created setting successfully",
           created: {
             mainColor: result.mainColor,
@@ -72,12 +83,13 @@ exports.create = (req, res, next) => {
               type: "POST",
               url: "http://localhost:3000/settings/" + result._id
             }
-          }
+          }*/
         });
       })
       .catch(err => {
-        res.status(403).json({
-          error: err
+        res.status(400).json({
+          error: err,
+          message: "Setting cannot be created"
         });
       });
   };
@@ -92,17 +104,18 @@ exports.update = (req, res, next) => {
   Setting.update({ _id: id }, { $set: updateOps })
     .exec()
     .then(result => {
-      res.status(200).json({
+      res.status(200)/*.json({
         message: "Setting updated",
         request: {
           type: "PUT",
           url: "http://localhost:3000/settings/" + id
         }
-      });
+      })*/;
     })
     .catch(err => {
-      res.status(403).json({
-        error: err
+      res.status(400).json({
+        error: err,
+        message: "Setting cannot be updated"
       });
     });
 };
@@ -112,17 +125,18 @@ exports.delete = (req, res, next) => {
   Setting.remove({ _id: id })
     .exec()
     .then(result => {
-      res.status(200).json({
+      res.status(200)/*.json({
         message: "setting deleted",
         request: {
           type: "DELETE",
           url: "http://localhost:3000/settings"
         }
-      });
+      })*/;
     })
     .catch(err => {
-      res.status(403).json({
-        error: err
+      res.status(400).json({
+        error: err,
+        message: "Setting cannot be deleted"
       });
     });
 };
