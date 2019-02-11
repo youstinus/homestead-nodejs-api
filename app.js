@@ -18,7 +18,10 @@ const settingsRoutes = require('./api/routes/settingsRoutes');
 
 //mongoose.set('useCreateIndex', true); // do need?
 mongoose.connect(
-    process.env.PROD_MONGODB,
+    process.env.PROD_MONGODB, // process.env is ".env" file.
+    // PROD_MONGODB is mongoDB connection string
+    // example connection string from mlab.com:
+    // mongodb://USER:PASS@LINK.mlab.com:PORT/DBNAME
     { 
       useCreateIndex: true,
       useNewUrlParser: true
