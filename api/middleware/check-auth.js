@@ -3,8 +3,8 @@ const jwt = require('jsonwebtoken');
 module.exports = (req, res, next) => {
     try {
         const token = req.headers.authorization.split(" ")[1];
+        // variable saved on server or on .env file
         const decoded = jwt.verify(token, process.env.JWT_KEY);
-        // JWT_KEY is key needed to decode and encode user information to/from token
         req.userData = decoded;
         console.log(req.body);
         next();
