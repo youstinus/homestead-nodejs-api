@@ -13,7 +13,7 @@
     "api"
   ],
   "author": "Undefined",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "bcrypt": "^3.0.4",
     "body-parser": "^1.18.3",
@@ -23,7 +23,8 @@
     "jsonwebtoken": "^8.4.0",
     "mongoose": "^5.4.11",
     "morgan": "^1.9.1",
-    "multer": "^1.4.1"
+    "multer": "^1.4.1",
+    "node": "^11.9.0"
   },
   "devDependencies": {
     "nodemon": "^1.18.10"
