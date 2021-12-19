@@ -6,7 +6,7 @@ PORT=3000
 PROD_MONGODB=https://USER:PASS@DBLINK.mlab.com/DBNAME
 JWT_KEY=RANDOMSECRETKEY
 
-##Run app with commands
+## Run app with commands
 npm install
 
 nodemon
